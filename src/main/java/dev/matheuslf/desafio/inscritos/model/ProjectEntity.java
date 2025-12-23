@@ -1,6 +1,6 @@
 package dev.matheuslf.desafio.inscritos.model;
 import jakarta.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "tb_project")
@@ -13,7 +13,7 @@ public class ProjectEntity {
 
     private String description;
 
-    private Date startDate;
+    private LocalDate startDate;
 
-    private Date endDate;
+    private LocalDate endDate;
 }
