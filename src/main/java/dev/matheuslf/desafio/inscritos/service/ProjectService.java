@@ -27,6 +27,12 @@ public class ProjectService {
         if(projetoEncontrado == null){
             throw new RuntimeException("Projeto não encontrado!");
         }
+
+        projetoEncontrado.setNome(projectEntity.getNome());
+        projetoEncontrado.setDescription(projectEntity.getDescription());
+        projetoEncontrado.setStartDate(projectEntity.getStartDate());
+        projetoEncontrado.setEndDate(projectEntity.getEndDate());
+
         return projectRepository.save(projectEntity);
     }
     public void deleteProject(Long id) {
