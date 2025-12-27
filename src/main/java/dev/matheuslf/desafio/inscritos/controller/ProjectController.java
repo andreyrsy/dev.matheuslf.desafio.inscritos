@@ -20,15 +20,21 @@ public class ProjectController {
     }
 
     @PostMapping()
-    public ResponseEntity<ProjectEntity> create(@RequestBody ProjectEntity projectEntity){
-        projectService.createProject(projectEntity);
-        return ResponseEntity.ok(projectEntity);
+    public ResponseEntity<ProjectResponseDto> create(@RequestBody ProjectRequestDto dto){
+        ProjectResponseDto response = projectService.createProject(dto);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<ProjectEntity>> listAll(){
-        List<ProjectEntity> all = projectService.findAll();
-        return ResponseEntity.ok(all);
+    public ResponseEntity<List<ProjectResponseDto>> listAll(){
+        List<ProjectResponseDto> allUsers = projectService.findAll();
+        return ResponseEntity.ok(allUsers);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProjectResponseDto> findOne(@PathVariable Long id){
+        ProjectResponseDto dto = projectService.findOne(id);
+        return ResponseEntity.ok(dto);
     }
 
     @PutMapping("/{id}")

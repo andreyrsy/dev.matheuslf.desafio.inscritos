@@ -19,13 +19,13 @@ public class ProjectEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nome;
+    private String name;
 
     private String description;
 
     @JsonProperty("start_date")
-    private LocalDate startDate;
+    private LocalDate start_date;
 
     @JsonProperty("end_date")
-    private LocalDate endDate;
+    private LocalDate end_date;
 }

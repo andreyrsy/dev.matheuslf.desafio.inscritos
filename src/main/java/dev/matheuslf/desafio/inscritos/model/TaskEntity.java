@@ -30,7 +30,7 @@ public class TaskEntity {
     @Enumerated(EnumType.STRING)
     private PriorityEnum priority;
 
-    private LocalDate dueDate;
+    private LocalDate due_date;
 
     @ManyToOne
     private ProjectEntity project;
