@@ -37,20 +37,16 @@ public class ProjectService {
 
         ProjectEntity saved = projectRepository.save(projetoExistente);
 
-        ProjectResponseDto responseDto = new ProjectResponseDto();
-        responseDto.setId(saved.getId());
-        responseDto.setNome(saved.getNome());
-        responseDto.setDescription(saved.getDescription());
-        responseDto.setStart_date(saved.getStartDate());
-        responseDto.setEnd_date(saved.getEndDate());
-
-        return responseDto;
+        return new ProjectResponseDto(
+                saved.getId(),
+                saved.getNome(),
+                saved.getDescription(),
+                saved.getStartDate(),
+                saved.getEndDate()
+        );
     }
     public void deleteProject(Long id) {
-        ProjectEntity projetoEncontrado = findOne(id);
-        if(projetoEncontrado == null){
-            throw new RuntimeException("Projeto não encontrado!");
-        }
+        projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Projeto não encontrado!"));
         projectRepository.deleteById(id);
     }
 }
