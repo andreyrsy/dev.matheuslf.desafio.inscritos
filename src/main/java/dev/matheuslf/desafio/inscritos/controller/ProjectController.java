@@ -1,5 +1,7 @@
 package dev.matheuslf.desafio.inscritos.controller;
 
+import dev.matheuslf.desafio.inscritos.dtos.ProjectRequestDto;
+import dev.matheuslf.desafio.inscritos.dtos.ProjectResponseDto;
 import dev.matheuslf.desafio.inscritos.model.ProjectEntity;
 import dev.matheuslf.desafio.inscritos.service.ProjectService;
 import org.springframework.http.HttpStatus;
@@ -30,9 +32,9 @@ public class ProjectController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProjectEntity> update(@PathVariable Long id, @RequestBody ProjectEntity projectEntity){
-        projectService.updateProject(id, projectEntity);
-        return ResponseEntity.ok(projectEntity);
+    public ResponseEntity<ProjectResponseDto> update(@PathVariable Long id, @RequestBody ProjectRequestDto dto){
+        ProjectResponseDto dtoResponse = projectService.updateProject(id, dto);
+        return ResponseEntity.ok().body(dtoResponse);
     }
 
     @DeleteMapping("/{id}")
