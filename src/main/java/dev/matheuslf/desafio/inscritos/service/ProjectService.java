@@ -2,6 +2,7 @@ package dev.matheuslf.desafio.inscritos.service;
 
 import dev.matheuslf.desafio.inscritos.dtos.ProjectRequestDto;
 import dev.matheuslf.desafio.inscritos.dtos.ProjectResponseDto;
+import dev.matheuslf.desafio.inscritos.mapper.ProjectMapper;
 import dev.matheuslf.desafio.inscritos.model.ProjectEntity;
 import dev.matheuslf.desafio.inscritos.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
@@ -12,66 +13,35 @@ import java.util.stream.Collectors;
 @Service
 public class ProjectService {
     private final ProjectRepository projectRepository;
+    private final ProjectMapper projectMapper;
 
-    public ProjectService(ProjectRepository projectRepository) {
+    public ProjectService(ProjectRepository projectRepository, ProjectMapper projectMapper) {
         this.projectRepository = projectRepository;
+        this.projectMapper = projectMapper;
     }
     public ProjectResponseDto createProject(ProjectRequestDto dtoRequest) {
+        ProjectEntity toEntity = projectMapper.toEntity(dtoRequest);
+        projectRepository.save(toEntity);
 
-        ProjectEntity entity = new ProjectEntity();
-        entity.setName(dtoRequest.name());
-        entity.setDescription(dtoRequest.description());
-        entity.setStart_date(dtoRequest.start_date());
-        entity.setEnd_date(dtoRequest.end_date());
-        projectRepository.save(entity);
-
-        return new ProjectResponseDto(
-                entity.getId(),
-                dtoRequest.name(),
-                dtoRequest.description(),
-                dtoRequest.start_date(),
-                dtoRequest.end_date()
-        );
+        return projectMapper.toResponseDto(toEntity);
     }
     public List<ProjectResponseDto> findAll(){
         return projectRepository.findAll()
                 .stream()
-                .map(user -> new ProjectResponseDto(
-                        user.getId(),
-                        user.getName(),
-                        user.getDescription(),
-                        user.getStart_date(),
-                        user.getEnd_date()
-                )).collect(Collectors.toList());
+                .map(projectMapper::toResponseDto)
+                .collect(Collectors.toList());
     }
     public ProjectResponseDto findOne(Long id){
         ProjectEntity entity = projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Projeto não encontrado!"));
-        return new ProjectResponseDto(
-                entity.getId(),
-                entity.getName(),
-                entity.getDescription(),
-                entity.getStart_date(),
-                entity.getEnd_date()
-        );
+        return projectMapper.toResponseDto(entity);
     }
     public ProjectResponseDto updateProject(Long id, ProjectRequestDto dto) {
         ProjectEntity projetoExistente = projectRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Projeto não encontrado!"));
 
-        projetoExistente.setName(dto.name());
-        projetoExistente.setDescription(dto.description());
-        projetoExistente.setStart_date(dto.start_date());
-        projetoExistente.setEnd_date(dto.end_date());
-
+        projectMapper.updateEntityFromDto(dto, projetoExistente);
         ProjectEntity saved = projectRepository.save(projetoExistente);
-
-        return new ProjectResponseDto(
-                saved.getId(),
-                saved.getName(),
-                saved.getDescription(),
-                saved.getStart_date(),
-                saved.getEnd_date()
-        );
+        return projectMapper.toResponseDto(saved);
     }
     public void deleteProject(Long id) {
         projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Projeto não encontrado!"));
