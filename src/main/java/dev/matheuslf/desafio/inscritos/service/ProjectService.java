@@ -32,7 +32,7 @@ public class ProjectService {
                 .map(projectMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
-    public ProjectResponseDto findOne(@Valid Long id){
+    public ProjectResponseDto findById(@Valid Long id){
         ProjectEntity entity = projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Projeto não encontrado!"));
         return projectMapper.toResponseDto(entity);
     }
@@ -45,7 +45,9 @@ public class ProjectService {
         return projectMapper.toResponseDto(saved);
     }
     public void deleteProject(@Valid Long id) {
-        projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Projeto não encontrado!"));
-        projectRepository.deleteById(id);
+        ProjectResponseDto project = findById(id);
+        if(project != null) {
+            projectRepository.deleteById(id);
+        }
     }
 }

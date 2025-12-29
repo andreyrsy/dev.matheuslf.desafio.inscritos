@@ -2,7 +2,6 @@ package dev.matheuslf.desafio.inscritos.controller;
 
 import dev.matheuslf.desafio.inscritos.dtos.ProjectRequestDto;
 import dev.matheuslf.desafio.inscritos.dtos.ProjectResponseDto;
-import dev.matheuslf.desafio.inscritos.model.ProjectEntity;
 import dev.matheuslf.desafio.inscritos.service.ProjectService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +32,7 @@ public class ProjectController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProjectResponseDto> findOne(@PathVariable Long id){
-        ProjectResponseDto dto = projectService.findOne(id);
+        ProjectResponseDto dto = projectService.findById(id);
         return ResponseEntity.ok(dto);
     }
 

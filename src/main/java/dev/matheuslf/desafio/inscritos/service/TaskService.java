@@ -62,8 +62,8 @@ public class TaskService {
     }
 
     public void deleteById(Long id){
-        TaskResponseDto item = findById(id);
-        if (item != null) {
+        TaskResponseDto task = findById(id);
+        if (task != null) {
             taskRepository.deleteById(id);
         }
     }
