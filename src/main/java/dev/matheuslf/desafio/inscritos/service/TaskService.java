@@ -3,56 +3,68 @@ package dev.matheuslf.desafio.inscritos.service;
 import dev.matheuslf.desafio.inscritos.dtos.ProjectResponseDto;
 import dev.matheuslf.desafio.inscritos.dtos.TaskRequestDto;
 import dev.matheuslf.desafio.inscritos.dtos.TaskResponseDto;
+import dev.matheuslf.desafio.inscritos.mapper.ProjectMapper;
+import dev.matheuslf.desafio.inscritos.mapper.TaskMapper;
 import dev.matheuslf.desafio.inscritos.model.ProjectEntity;
 import dev.matheuslf.desafio.inscritos.model.TaskEntity;
 import dev.matheuslf.desafio.inscritos.repository.ProjectRepository;
 import dev.matheuslf.desafio.inscritos.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 public class TaskService {
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
+    private final TaskMapper taskMapper;
 
-    public TaskService(TaskRepository taskRepository, ProjectRepository projectRepository) {
+    public TaskService(TaskRepository taskRepository, ProjectRepository projectRepository, TaskMapper taskMapper) {
         this.taskRepository = taskRepository;
         this.projectRepository = projectRepository;
+        this.taskMapper = taskMapper;
     }
 
     public TaskResponseDto createTask(TaskRequestDto requestDto) {
         ProjectEntity projetoExistente = projectRepository.findById(requestDto.project()).orElseThrow(() -> new RuntimeException("Projeto não encontrado!"));
-        TaskEntity entity = new TaskEntity();
 
-        entity.setTitle(requestDto.title());
-        entity.setDescription(requestDto.description());
-        entity.setStatus(requestDto.status());
-        entity.setPriority(requestDto.priority());
-        entity.setDue_date(requestDto.due_date());
-
+        TaskEntity entity = taskMapper.toEntity(requestDto);
         entity.setProject(projetoExistente);
         taskRepository.saveAndFlush(entity);
 
-        ProjectResponseDto projectToDto = new ProjectResponseDto(
-                projetoExistente.getId(),
-                projetoExistente.getName(),
-                projetoExistente.getDescription(),
-                projetoExistente.getStart_date(),
-                projetoExistente.getEnd_date()
-        );
-
-        return new TaskResponseDto(
-                entity.getId(),
-                entity.getTitle(),
-                entity.getDescription(),
-                entity.getStatus(),
-                entity.getPriority(),
-                entity.getDue_date(),
-                projectToDto
-        );
+        return taskMapper.toResponseDto(entity);
     }
 
-    public TaskEntity findById(Long id){
-        return taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task não encontrada!"));
+    public TaskResponseDto findById(Long id){
+        TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task não encontrada!"));
+        return taskMapper.toResponseDto(task);
+    }
+
+    public List<TaskResponseDto> findAll(){
+        List<TaskEntity> tasks = taskRepository.findAll();
+
+        return tasks.stream()
+                .map(taskMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    public TaskResponseDto updateTask(Long id, TaskRequestDto dto) {
+        TaskEntity taskExistente = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task não encontrada!"));
+
+        taskMapper.updateEntityFromDto(dto, taskExistente);
+        TaskEntity saved = taskRepository.save(taskExistente);
+
+        return taskMapper.toResponseDto(saved);
+    }
+
+    public void deleteById(Long id){
+        TaskResponseDto item = findById(id);
+        if (item != null) {
+            taskRepository.deleteById(id);
+        }
     }
 }

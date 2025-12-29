@@ -5,6 +5,7 @@ import dev.matheuslf.desafio.inscritos.dtos.ProjectResponseDto;
 import dev.matheuslf.desafio.inscritos.mapper.ProjectMapper;
 import dev.matheuslf.desafio.inscritos.model.ProjectEntity;
 import dev.matheuslf.desafio.inscritos.repository.ProjectRepository;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class ProjectService {
         this.projectRepository = projectRepository;
         this.projectMapper = projectMapper;
     }
-    public ProjectResponseDto createProject(ProjectRequestDto dtoRequest) {
+    public ProjectResponseDto createProject(@Valid ProjectRequestDto dtoRequest) {
         ProjectEntity toEntity = projectMapper.toEntity(dtoRequest);
         projectRepository.save(toEntity);
 
@@ -31,11 +32,11 @@ public class ProjectService {
                 .map(projectMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
-    public ProjectResponseDto findOne(Long id){
+    public ProjectResponseDto findOne(@Valid Long id){
         ProjectEntity entity = projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Projeto não encontrado!"));
         return projectMapper.toResponseDto(entity);
     }
-    public ProjectResponseDto updateProject(Long id, ProjectRequestDto dto) {
+    public ProjectResponseDto updateProject(@Valid Long id, @Valid ProjectRequestDto dto) {
         ProjectEntity projetoExistente = projectRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Projeto não encontrado!"));
 
@@ -43,7 +44,7 @@ public class ProjectService {
         ProjectEntity saved = projectRepository.save(projetoExistente);
         return projectMapper.toResponseDto(saved);
     }
-    public void deleteProject(Long id) {
+    public void deleteProject(@Valid Long id) {
         projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Projeto não encontrado!"));
         projectRepository.deleteById(id);
     }
