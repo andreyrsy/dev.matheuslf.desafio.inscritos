@@ -1,4 +1,5 @@
 package dev.matheuslf.desafio.inscritos.model;
+import dev.matheuslf.desafio.inscritos.dtos.ProjectResponseDto;
 import dev.matheuslf.desafio.inscritos.model.enums.PriorityEnum;
 import dev.matheuslf.desafio.inscritos.model.enums.StatusEnum;
 import jakarta.persistence.*;
@@ -19,9 +20,7 @@ public class TaskEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String title;
-
     private String description;
 
     @Enumerated(EnumType.STRING)

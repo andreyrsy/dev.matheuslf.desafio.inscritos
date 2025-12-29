@@ -3,7 +3,7 @@ import java.time.LocalDate;
 
 public record ProjectResponseDto(
     Long id,
-    String nome,
+    String name,
     String description,
     LocalDate start_date,
     LocalDate end_date

@@ -15,6 +15,6 @@ public record TaskRequestDto(
         @Enumerated(EnumType.STRING)
         PriorityEnum priority,
         LocalDate due_date,
-        ProjectResponseDto project
+        Long project
 ) {
 }
