@@ -2,9 +2,13 @@ package dev.matheuslf.desafio.inscritos.service;
 
 import dev.matheuslf.desafio.inscritos.dtos.TaskRequestDto;
 import dev.matheuslf.desafio.inscritos.dtos.TaskResponseDto;
+import dev.matheuslf.desafio.inscritos.exceptions.ProjetoNaoEncontradoException;
+import dev.matheuslf.desafio.inscritos.exceptions.StatusNaoAlteradoException;
+import dev.matheuslf.desafio.inscritos.exceptions.TaskNaoEncontradaException;
 import dev.matheuslf.desafio.inscritos.mapper.TaskMapper;
 import dev.matheuslf.desafio.inscritos.model.ProjectEntity;
 import dev.matheuslf.desafio.inscritos.model.TaskEntity;
+import dev.matheuslf.desafio.inscritos.model.enums.StatusEnum;
 import dev.matheuslf.desafio.inscritos.repository.ProjectRepository;
 import dev.matheuslf.desafio.inscritos.repository.TaskRepository;
 import org.springframework.stereotype.Service;
@@ -26,7 +30,8 @@ public class TaskService {
     }
 
     public TaskResponseDto createTask(TaskRequestDto requestDto) {
-        ProjectEntity projetoExistente = projectRepository.findById(requestDto.project()).orElseThrow(() -> new RuntimeException("Projeto não encontrado!"));
+        ProjectEntity projetoExistente = projectRepository.findById(requestDto.project())
+                .orElseThrow(() -> new ProjetoNaoEncontradoException(requestDto.project()));
 
         TaskEntity entity = taskMapper.toEntity(requestDto);
         entity.setProject(projetoExistente);
@@ -36,7 +41,8 @@ public class TaskService {
     }
 
     public TaskResponseDto findById(Long id){
-        TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task não encontrada!"));
+        TaskEntity task = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNaoEncontradaException(id));
         return taskMapper.toResponseDto(task);
     }
 
@@ -50,7 +56,7 @@ public class TaskService {
 
     public TaskResponseDto updateTask(Long id, TaskRequestDto dto) {
         TaskEntity taskExistente = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task não encontrada!"));
+                .orElseThrow(() -> new TaskNaoEncontradaException(id));
 
         taskMapper.updateEntityFromDto(dto, taskExistente);
         TaskEntity saved = taskRepository.save(taskExistente);
@@ -60,16 +66,21 @@ public class TaskService {
 
     public TaskResponseDto updateStatus(Long id, TaskRequestDto dto) {
         TaskEntity taskExistente = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task não encontrada!"));
-        taskExistente.setStatus(dto.status());
-        taskRepository.save(taskExistente);
-        return taskMapper.toResponseDto(taskExistente);
+                .orElseThrow(() -> new TaskNaoEncontradaException(id));
+        try {
+            taskExistente.setStatus(dto.status());
+            taskRepository.save(taskExistente);
+            return taskMapper.toResponseDto(taskExistente);
+        }catch(Exception ex) {
+            throw new StatusNaoAlteradoException(taskExistente.getId());
+        }
     }
 
     public void deleteById(Long id){
-        TaskResponseDto task = findById(id);
-        if (task != null) {
+        try{
             taskRepository.deleteById(id);
+        }catch(Exception ex){
+            throw new TaskNaoEncontradaException(id);
         }
     }
 }
