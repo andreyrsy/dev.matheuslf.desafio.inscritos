@@ -6,11 +6,13 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
 public record TaskRequestDto(
         @NotEmpty(message = "O título é obrigatório!")
+        @Size(min = 5, max = 150, message = "Titulo deve ter entre 5 e 150 caracteres.")
         String title,
 
         @NotEmpty(message = "Descrição não pode ser vazia!")
