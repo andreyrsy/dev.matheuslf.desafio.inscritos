@@ -10,12 +10,10 @@ public record ProjectRequestDto (
         @NotBlank
         String name,
 
-        @NotEmpty
         String description,
 
         @NotEmpty
         LocalDate start_date,
 
-        @NotEmpty
         LocalDate end_date
 ){}

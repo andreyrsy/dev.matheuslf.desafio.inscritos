@@ -2,16 +2,14 @@ package dev.matheuslf.desafio.inscritos.controller;
 
 import dev.matheuslf.desafio.inscritos.dtos.TaskRequestDto;
 import dev.matheuslf.desafio.inscritos.dtos.TaskResponseDto;
-import dev.matheuslf.desafio.inscritos.model.TaskEntity;
 import dev.matheuslf.desafio.inscritos.service.TaskService;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/task")
+@RequestMapping("/tasks")
 public class TaskController {
     private final TaskService taskService;
 
@@ -41,6 +39,12 @@ public class TaskController {
     public ResponseEntity<TaskResponseDto> updateTask(@RequestBody TaskRequestDto dto, @PathVariable Long id){
         TaskResponseDto updatedTask = taskService.updateTask(id, dto);
         return ResponseEntity.ok(updatedTask);
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<TaskResponseDto> updateStatus(@PathVariable Long id, @RequestBody TaskRequestDto status){
+        TaskResponseDto updated = taskService.updateStatus(id, status);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")

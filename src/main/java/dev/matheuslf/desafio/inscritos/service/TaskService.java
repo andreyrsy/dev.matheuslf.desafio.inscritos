@@ -1,5 +1,6 @@
 package dev.matheuslf.desafio.inscritos.service;
 
+import dev.matheuslf.desafio.inscritos.dtos.ProjectRequestDto;
 import dev.matheuslf.desafio.inscritos.dtos.ProjectResponseDto;
 import dev.matheuslf.desafio.inscritos.dtos.TaskRequestDto;
 import dev.matheuslf.desafio.inscritos.dtos.TaskResponseDto;
@@ -7,6 +8,7 @@ import dev.matheuslf.desafio.inscritos.mapper.ProjectMapper;
 import dev.matheuslf.desafio.inscritos.mapper.TaskMapper;
 import dev.matheuslf.desafio.inscritos.model.ProjectEntity;
 import dev.matheuslf.desafio.inscritos.model.TaskEntity;
+import dev.matheuslf.desafio.inscritos.model.enums.StatusEnum;
 import dev.matheuslf.desafio.inscritos.repository.ProjectRepository;
 import dev.matheuslf.desafio.inscritos.repository.TaskRepository;
 import org.springframework.stereotype.Service;
@@ -59,6 +61,14 @@ public class TaskService {
         TaskEntity saved = taskRepository.save(taskExistente);
 
         return taskMapper.toResponseDto(saved);
+    }
+
+    public TaskResponseDto updateStatus(Long id, TaskRequestDto dto) {
+        TaskEntity taskExistente = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task não encontrada!"));
+        taskExistente.setStatus(dto.status());
+        taskRepository.save(taskExistente);
+        return taskMapper.toResponseDto(taskExistente);
     }
 
     public void deleteById(Long id){
