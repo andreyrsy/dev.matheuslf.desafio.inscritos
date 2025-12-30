@@ -3,6 +3,7 @@ package dev.matheuslf.desafio.inscritos.controller;
 import dev.matheuslf.desafio.inscritos.dtos.TaskRequestDto;
 import dev.matheuslf.desafio.inscritos.dtos.TaskResponseDto;
 import dev.matheuslf.desafio.inscritos.service.TaskService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,25 +32,25 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskResponseDto> findById(@PathVariable Long id){
+    public ResponseEntity<TaskResponseDto> findById(@PathVariable @Valid Long id){
         TaskResponseDto dto = taskService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TaskResponseDto> updateTask(@RequestBody TaskRequestDto dto, @PathVariable Long id){
+    public ResponseEntity<TaskResponseDto> updateTask(@RequestBody TaskRequestDto dto, @PathVariable @Valid Long id){
         TaskResponseDto updatedTaskDto = taskService.updateTask(id, dto);
         return ResponseEntity.status(HttpStatus.OK).body(updatedTaskDto);
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<TaskResponseDto> updateStatus(@PathVariable Long id, @RequestBody TaskRequestDto status){
+    public ResponseEntity<TaskResponseDto> updateStatus(@PathVariable @Valid Long id, @RequestBody TaskRequestDto status){
         TaskResponseDto updated = taskService.updateStatus(id, status);
         return ResponseEntity.accepted().body(updated);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable Long id){
+    public ResponseEntity<?> deleteById(@PathVariable @Valid Long id){
         taskService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
