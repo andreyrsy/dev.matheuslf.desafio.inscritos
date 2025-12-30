@@ -10,26 +10,24 @@ import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
 public record TaskRequestDto(
-        @NotEmpty
+        @NotEmpty(message = "O título é obrigatório!")
         String title,
 
-        @NotEmpty
+        @NotEmpty(message = "Descrição não pode ser vazia!")
         String description,
 
-        @NotEmpty
+        @NotEmpty(message = "A Task deve ter um Status!")
         @Enumerated(EnumType.STRING)
         StatusEnum status,
 
-        @NotEmpty
+        @NotEmpty(message = ("A Task deve ter uma prioridade!"))
         @Enumerated(EnumType.STRING)
-
-        @NotEmpty
         PriorityEnum priority,
 
-        @NotEmpty
+        @NotEmpty(message = "A Task deve ter data limite!")
         LocalDate due_date,
 
-        @NotBlank
+        @NotBlank(message = "A Task deve ter um projeto atribuído!")
         Long project
 ) {
 }
