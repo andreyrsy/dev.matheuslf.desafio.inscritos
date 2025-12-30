@@ -1,10 +1,7 @@
 package dev.matheuslf.desafio.inscritos.mapper;
-
-import dev.matheuslf.desafio.inscritos.dtos.ProjectRequestDto;
 import dev.matheuslf.desafio.inscritos.dtos.ProjectResponseDto;
 import dev.matheuslf.desafio.inscritos.dtos.TaskRequestDto;
 import dev.matheuslf.desafio.inscritos.dtos.TaskResponseDto;
-import dev.matheuslf.desafio.inscritos.model.ProjectEntity;
 import dev.matheuslf.desafio.inscritos.model.TaskEntity;
 import org.springframework.stereotype.Component;
 

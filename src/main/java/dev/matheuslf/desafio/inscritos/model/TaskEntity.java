@@ -1,5 +1,4 @@
 package dev.matheuslf.desafio.inscritos.model;
-import dev.matheuslf.desafio.inscritos.dtos.ProjectResponseDto;
 import dev.matheuslf.desafio.inscritos.model.enums.PriorityEnum;
 import dev.matheuslf.desafio.inscritos.model.enums.StatusEnum;
 import jakarta.persistence.*;
