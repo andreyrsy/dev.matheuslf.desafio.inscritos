@@ -9,8 +9,6 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface ProjectMapper {
     ProjectEntity toEntity(ProjectRequestDto dtoRequest);
-
     ProjectResponseDto toResponseDto(ProjectEntity entity);
-
     void updateEntity(ProjectRequestDto dto, @MappingTarget ProjectEntity entity);
 }

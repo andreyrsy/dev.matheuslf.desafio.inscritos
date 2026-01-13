@@ -8,7 +8,6 @@ import dev.matheuslf.desafio.inscritos.exceptions.TaskNaoEncontradaException;
 import dev.matheuslf.desafio.inscritos.mapper.TaskMapper;
 import dev.matheuslf.desafio.inscritos.model.ProjectEntity;
 import dev.matheuslf.desafio.inscritos.model.TaskEntity;
-import dev.matheuslf.desafio.inscritos.model.enums.StatusEnum;
 import dev.matheuslf.desafio.inscritos.repository.ProjectRepository;
 import dev.matheuslf.desafio.inscritos.repository.TaskRepository;
 import org.springframework.stereotype.Service;
