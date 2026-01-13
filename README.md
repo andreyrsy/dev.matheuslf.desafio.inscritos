@@ -5,6 +5,12 @@ Sua missão é desenvolver uma **API RESTful em Java com Spring Boot** para gere
 O sistema será utilizado por um time de desenvolvimento para organizar suas entregas, acompanhar o status das tarefas e realizar análises simples.
 
 ---
+Rodar o projeto 
+```
+mvn package
+docker compose up
+```
+---
 
 ## 🎯 Requisitos Técnicos
 
