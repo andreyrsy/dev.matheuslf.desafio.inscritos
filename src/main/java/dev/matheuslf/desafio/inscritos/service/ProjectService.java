@@ -24,6 +24,9 @@ public class ProjectService {
     }
     public ProjectResponseDto createProject(@Valid ProjectRequestDto dtoRequest) {
         try {
+            if(!dtoRequest.start_date().isBefore(dtoRequest.end_date())){
+                throw new DataInvalidaException("Data invalida!");
+            }
             ProjectEntity toEntity = projectMapper.toEntity(dtoRequest);
             projectRepository.save(toEntity);
             return projectMapper.toResponseDto(toEntity);
@@ -31,12 +34,14 @@ public class ProjectService {
             throw new RuntimeException(ex);
         }
     }
+
     public List<ProjectResponseDto> findAll(){
         return projectRepository.findAll()
                 .stream()
                 .map(projectMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
+
     public ProjectResponseDto findById(@Valid Long id){
         try{
             ProjectEntity entity = projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Projeto não encontrado!"));
@@ -45,18 +50,21 @@ public class ProjectService {
             throw new ProjetoNaoEncontradoException(id);
         }
     }
+
     public ProjectResponseDto updateProject(@Valid Long id, @Valid ProjectRequestDto dto) {
         ProjectEntity projetoExistente = projectRepository.findById(id)
                 .orElseThrow(() -> new ProjetoNaoEncontradoException(id));
 
-        projectMapper.updateEntityFromDto(dto, projetoExistente);
-        if(dto.start_date().isBefore(dto.end_date())){
+        projectMapper.updateEntity(dto, projetoExistente);
+
+        if(!dto.start_date().isBefore(dto.end_date())){
             throw new DataInvalidaException("Data invalida!");
         }
 
         ProjectEntity saved = projectRepository.save(projetoExistente);
         return projectMapper.toResponseDto(saved);
     }
+
     public void deleteProject(@Valid Long id) {
         try{
             projectRepository.deleteById(id);
